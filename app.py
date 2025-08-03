@@ -1,7 +1,7 @@
 from flask import send_file, send_from_directory
 import os
-from flask import Flask, render_template_string, request
-from apted_demo import compute_diff, pretty_tree, diff_operations
+from flask import Flask, request
+from apted_demo import compute_diff, pretty_tree, diff_operations, build_diff_html
 
 app = Flask(__name__)
 
@@ -120,17 +120,15 @@ TEMPLATE = """
 </html>
 """
 
-@app.route("/", methods=["GET", "POST"])
-def index():
-    a = EXAMPLE_A
-    b = EXAMPLE_B
+@app.route("/", methods=["POST"])
+def diff():
+    """Generate a diff using APTED algorithm"""
     tree_a = tree_b = distance = diff_ops = None
-    from apted_demo import build_diff_html
     diff_html = None
     mapping = []
     if request.method == "POST":
-        a = request.form.get("a", a)
-        b = request.form.get("b", b)
+        a = request.form.get("a", '')
+        b = request.form.get("b", '')
         try:
             n1, n2, distance, mapping = compute_diff(a, b)
             tree_a = pretty_tree(n1)
@@ -143,17 +141,9 @@ def index():
             distance = ""
             diff_ops = []
             diff_html = None
-    return render_template_string(
-        TEMPLATE,
-        example_a=a,
-        example_b=b,
-        tree_a=tree_a,
-        tree_b=tree_b,
-        distance=distance,
-        diff_ops=diff_ops or [],
-        diff_html=diff_html,
-        mapping=mapping or []
-    )
+    return {
+        "diff_html": diff_html,
+    }
 
 if __name__ == "__main__":
     app.run(debug=True)

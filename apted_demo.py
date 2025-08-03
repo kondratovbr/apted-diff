@@ -100,12 +100,12 @@ def build_diff_html(n1, n2, mapping):
             # If leaf node (text node): show update inline
             if not childrenA and not childrenB:
                 # Show deleted and inserted values side by side
-                del_html = f"<del class='diff-del'><{tagA}>{textA}</{tagA}></del>"
-                ins_html = f"<ins class='diff-ins'><{tagB}>{textB}</{tagB}></ins>"
+                del_html = f"<del><{tagA}>{textA}</{tagA}></del>"
+                ins_html = f"<ins><{tagB}>{textB}</{tagB}></ins>"
                 return del_html + ins_html
             # Otherwise, show old subtree as deleted and new as inserted
-            del_html = f"<del class='diff-del'>" + walk(nodeA, None) + "</del>"
-            ins_html = f"<ins class='diff-ins'>" + walk(None, nodeB) + "</ins>"
+            del_html = f"<del>" + walk(nodeA, None) + "</del>"
+            ins_html = f"<ins>" + walk(None, nodeB) + "</ins>"
             return del_html + ins_html
 
         # Unchanged node (exact match)
@@ -122,18 +122,18 @@ def build_diff_html(n1, n2, mapping):
             tag, text = parse_node_name(nodeA.name)
             childrenA = nodeA.get_children()
             if not childrenA:
-                return f"<del class='diff-del'><{tag}>{text}</{tag}></del>"
+                return f"<del><{tag}>{text}</{tag}></del>"
             children_html = ''.join([walk(cA, None) for cA in childrenA])
-            return f"<del class='diff-del'><{tag}>{children_html}</{tag}></del>"
+            return f"<del><{tag}>{children_html}</{tag}></del>"
 
         # Insertion (in B not in A)
         if nodeB and not nodeA:
             tag, text = parse_node_name(nodeB.name)
             childrenB = nodeB.get_children()
             if not childrenB:
-                return f"<ins class='diff-ins'><{tag}>{text}</{tag}></ins>"
+                return f"<ins><{tag}>{text}</{tag}></ins>"
             children_html = ''.join([walk(None, cB) for cB in childrenB])
-            return f"<ins class='diff-ins'><{tag}>{children_html}</{tag}></ins>"
+            return f"<ins><{tag}>{children_html}</{tag}></ins>"
 
         # Should not occur for well-formed trees/mapping
         return ""

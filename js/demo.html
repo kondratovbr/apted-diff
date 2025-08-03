@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Zhang-Shasha XML Diff Demo</title>
+    <style>
+        body { font-family: system-ui, sans-serif; margin: 40px auto; max-width: 800px; background: #f5f5f7; color: #212121; }
+        h1 { font-size: 2rem; margin-bottom: 1.4rem; }
+        .input-section { display: flex; gap: 24px; margin-bottom: 24px; }
+        textarea { width: 100%; height: 225px; font-family: Menlo, monospace; font-size: 15px; border: 1px solid #bbb; border-radius: 7px; padding: 12px; background: #fff; color: #222; }
+        button { padding: 10px 30px; font-size: 1rem; border-radius: 6px; border: none; background: #3475fa; color: #fff; cursor: pointer; margin-bottom: 16px;}
+        button:hover { background: #1956b6; }
+        .diff-list { margin-top: 18px; padding: 0; list-style: none; }
+        .op-insert { color: #18671f; background-color: #e8ffe9; border-left: 4px solid #13b542; padding-left: 7px;}
+        .op-delete { color: #a53b22; background-color: #ffeaea; border-left: 4px solid #de5049; padding-left: 7px;}
+        .op-rename { color: #967800; background-color: #fffbe0; border-left: 4px solid #eac731; padding-left: 7px;}
+        .op-match { color: #444; background-color: #ebf2fa; border-left: 4px solid #90a2be; padding-left: 7px;}
+        .err { color: #de5049; font-weight: 600; }
+        @media (max-width: 600px) {
+            .input-section { flex-direction: column; gap: 12px; }
+            textarea { height: 150px; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Zhang-Shasha XML Diff Demo</h1>
+    <form id="diff-form" autocomplete="off">
+        <div class="input-section">
+            <div style="flex:1">
+                <label for="xml1"><strong>XML Input A:</strong></label>
+                <textarea id="xml1" required><article>
+<h2>Welcome to PearAI Demo</h2>
+<p>
+    This is a <b>simple example article</b> to demonstrate <i>HTML/XML Tree Diff</i>.<br/>
+    Compare this text to see how <b>small edits</b> are detected and rendered.
+</p>
+<ul>
+    <li>First item</li>
+    <li>Second item</li>
+    <li>Third item</li>
+</ul>
+<p>End of article.</p>
+</article></textarea>
+            </div>
+            <div style="flex:1">
+                <label for="xml2"><strong>XML Input B:</strong></label>
+                <textarea id="xml2" required><article>
+<h2>Welcome to the PearAI Demo!</h2>
+<p>
+    This is a <b>simple article</b> showing <i>HTML/XML Tree Diff</i>.<br/>
+    Try comparing it and see how <b>changes</b> are detected and visualized.
+</p>
+<ul>
+    <li>First item</li>
+    <li>Second entry</li>
+    <li>Fourth item</li>
+</ul>
+<p>The end of this article.</p>
+</article></textarea>
+            </div>
+        </div>
+        <button type="submit">Compare</button>
+    </form>
+    <div id="diff-results"></div>
+    <script src="/js/diff.js"></script>
+    <script>
+        function renderDiff(ops) {
+            if (!Array.isArray(ops)) return "";
+            return '<ul class="diff-list">' + ops.map(opObj => {
+                if (!opObj) return "";
+                let text, cls = '';
+                switch (opObj.op) {
+                    case 'insert':
+                        text = `Insert: <strong>${opObj.node}</strong>`;
+                        cls = 'op-insert';
+                        break;
+                    case 'delete':
+                        text = `Delete: <strong>${opObj.node}</strong>`;
+                        cls = 'op-delete';
+                        break;
+                    case 'rename':
+                        text = `Replace: <strong>${opObj.from}</strong> → <strong>${opObj.to}</strong>`;
+                        cls = 'op-rename';
+                        break;
+                    case 'match':
+                        text = `Match: <strong>${opObj.from}</strong>`;
+                        cls = 'op-match';
+                        break;
+                    default:
+                        text = JSON.stringify(opObj);
+                        cls = 'op-match';
+                }
+                return `<li class="${cls}">${text}</li>`;
+            }).join('') + "</ul>";
+        }
+
+        document.getElementById('diff-form').onsubmit = function(e) {
+            e.preventDefault();
+            const xmlA = document.getElementById('xml1').value;
+            const xmlB = document.getElementById('xml2').value;
+            let outputDiv = document.getElementById('diff-results');
+            outputDiv.innerHTML = "";
+            try {
+                const treeA = parseXML(xmlA);
+                const treeB = parseXML(xmlB);
+                const result = treeEditDistanceWithDiff(treeA, treeB);
+                outputDiv.innerHTML = 
+                    `<div>Tree Edit Distance: <strong>${result.distance}</strong></div>`
+                    + renderDiff(result.diff);
+            } catch (err) {
+                outputDiv.innerHTML = `<div class="err">Error: ${err.message}</div>`;
+            }
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "html_xml_apted_diff"
+version = "0.1.0"
+description = "Simple CLI tool to compute the APTED tree edit distance between two HTML/XML strings"
+authors = [
+  { name="Your Name", email="your@email.com" }
+]
+dependencies = [
+  "apted>=1.0.3",
+  "flask>=2.0",
+]
+requires-python = ">=3.8"

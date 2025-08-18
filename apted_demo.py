@@ -1,7 +1,6 @@
 import sys
 import xml.etree.ElementTree as ET
 from apted import APTED, Config
-from apted import APTED
 
 class SimpleConfig(Config):
     def normalized_label(self, node):
@@ -34,6 +33,14 @@ def etree_to_node(node):
         label += f":{node.text.strip()}"
     return Node(label, [etree_to_node(child) for child in node])
 
+def pretty_tree(node, depth=0):
+    """Return a pretty string representation of a Node tree with indentation."""
+    indent = "  " * depth
+    s = f"{indent}{node.name}\n"
+    for child in node.get_children():
+        s += pretty_tree(child, depth + 1)
+    return s
+
 def diff_operations(n1, n2, mapping):
     """Return a list of diff operations as strings: Unchanged, Update, Delete, Insert."""
     ops = []
@@ -49,14 +56,6 @@ def diff_operations(n1, n2, mapping):
             ops.append(f"Insert: {node2.name}")
     return ops
 
-def pretty_tree(node, depth=0):
-    """Return a pretty string representation of a Node tree with indentation."""
-    indent = "  " * depth
-    s = f"{indent}{node.name}\n"
-    for child in node.get_children():
-        s += pretty_tree(child, depth + 1)
-    return s
-
 def compute_diff(a, b):
     """
     Parse HTML/XML strings a, b to Node trees, compute tree edit distance and mapping.
@@ -71,15 +70,14 @@ def compute_diff(a, b):
 
 def build_diff_html(n1, n2, mapping):
     """Return an HTML string with <ins>, <del>, <span> for visualize-in-article diff."""
-
     # Build lookup for nodeA: nodeB, nodeB: nodeA
-    map_A = {}
-    map_B = {}
+    map_a = {}
+    map_b = {}
     for nodeA, nodeB in mapping:
         if nodeA:
-            map_A[nodeA] = nodeB
+            map_a[nodeA] = nodeB
         if nodeB:
-            map_B[nodeB] = nodeA
+            map_b[nodeB] = nodeA
 
     def parse_node_name(name):
         """Returns tag, text for a node.name (e.g. 'p:hello' -> 'p', 'hello')"""
@@ -89,54 +87,52 @@ def build_diff_html(n1, n2, mapping):
             tag, text = name, ""
         return tag, text
 
-    def walk(nodeA, nodeB):
+    def walk(node_a, node_b):
         # Updated node: same mapped, but text differs
-        if nodeA and nodeB and nodeA.name != nodeB.name:
-            tagA, textA = parse_node_name(nodeA.name)
-            tagB, textB = parse_node_name(nodeB.name)
+        if node_a and node_b and node_a.name != node_b.name:
+            tag_a, text_a = parse_node_name(node_a.name)
+            tag_b, text_b = parse_node_name(node_b.name)
             # Show update as modified content in the same tag, highlight changes
-            childrenA = nodeA.get_children()
-            childrenB = nodeB.get_children()
+            children_a = node_a.get_children()
+            children_b = node_b.get_children()
             # If leaf node (text node): show update inline
-            if not childrenA and not childrenB:
-                # Show deleted and inserted values side by side
-                del_html = f"<del><{tagA}>{textA}</{tagA}></del>"
-                ins_html = f"<ins><{tagB}>{textB}</{tagB}></ins>"
+            if not children_a and not children_b:
+                del_html = f"<del><{tag_a}>{text_a}</{tag_a}></del>"
+                ins_html = f"<ins><{tag_b}>{text_b}</{tag_b}></ins>"
                 return del_html + ins_html
             # Otherwise, show old subtree as deleted and new as inserted
-            del_html = f"<del>" + walk(nodeA, None) + "</del>"
-            ins_html = f"<ins>" + walk(None, nodeB) + "</ins>"
+            del_html = f"<del>" + walk(node_a, None) + "</del>"
+            ins_html = f"<ins>" + walk(None, node_b) + "</ins>"
             return del_html + ins_html
 
         # Unchanged node (exact match)
-        if nodeA and nodeB and nodeA.name == nodeB.name:
-            tag, text = parse_node_name(nodeA.name)
-            childrenA = nodeA.get_children()
-            if not childrenA:
+        if node_a and node_b and node_a.name == node_b.name:
+            tag, text = parse_node_name(node_a.name)
+            children_a = node_a.get_children()
+            if not children_a:
                 return f"<{tag}>{text}</{tag}>"
-            children_html = ''.join([walk(cA, map_A.get(cA)) for cA in childrenA])
+            children_html = ''.join([walk(cA, map_a.get(cA)) for cA in children_a])
             return f"<{tag}>{children_html}</{tag}>"
 
         # Deletion (in A not in B)
-        if nodeA and not nodeB:
-            tag, text = parse_node_name(nodeA.name)
-            childrenA = nodeA.get_children()
-            if not childrenA:
-                return f"<del><{tag}>{text}</{tag}></del>"
-            children_html = ''.join([walk(cA, None) for cA in childrenA])
-            return f"<del><{tag}>{children_html}</{tag}></del>"
+        if node_a and not node_b:
+            tag, text = parse_node_name(node_a.name)
+            children_a = node_a.get_children()
+            if not children_a:
+                return f"<del class='diff-del'><{tag}>{text}</{tag}></del>"
+            children_html = ''.join([walk(cA, None) for cA in children_a])
+            return f"<del class='diff-del'><{tag}>{children_html}</{tag}></del>"
 
         # Insertion (in B not in A)
-        if nodeB and not nodeA:
-            tag, text = parse_node_name(nodeB.name)
-            childrenB = nodeB.get_children()
-            if not childrenB:
-                return f"<ins><{tag}>{text}</{tag}></ins>"
-            children_html = ''.join([walk(None, cB) for cB in childrenB])
-            return f"<ins><{tag}>{children_html}</{tag}></ins>"
+        if node_b and not node_a:
+            tag, text = parse_node_name(node_b.name)
+            children_b = node_b.get_children()
+            if not children_b:
+                return f"<ins class='diff-ins'><{tag}>{text}</{tag}></ins>"
+            children_html = ''.join([walk(None, cB) for cB in children_b])
+            return f"<ins class='diff-ins'><{tag}>{children_html}</{tag}></ins>"
 
         # Should not occur for well-formed trees/mapping
         return ""
 
-    # Always show as rendered HTML, not text!
     return walk(n1, n2)

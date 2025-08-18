@@ -47,13 +47,13 @@ def diff_operations(n1, n2, mapping):
     for node1, node2 in mapping:
         if node1 and node2:
             if node1.name == node2.name:
-                ops.append(f"Unchanged: {node1.name}")
+                ops.append(f"Unchanged: '{node1.name}'")
             else:
                 ops.append(f"Update: '{node1.name}' → '{node2.name}'")
         elif node1:
-            ops.append(f"Delete: {node1.name}")
+            ops.append(f"Delete: '{node1.name}'")
         elif node2:
-            ops.append(f"Insert: {node2.name}")
+            ops.append(f"Insert: '{node2.name}'")
     return ops
 
 def compute_diff(a, b):
@@ -90,8 +90,11 @@ def build_diff_html(n1, n2, mapping):
     def walk(node_a, node_b):
         # Updated node: same mapped, but text differs
         if node_a and node_b and node_a.name != node_b.name:
+            print('case 1: ' + node_a.name + ' ' + node_b.name)
             tag_a, text_a = parse_node_name(node_a.name)
             tag_b, text_b = parse_node_name(node_b.name)
+            print(tag_a + ' : ' + text_a)
+            print(tag_b + ' : ' + text_b)
             # Show update as modified content in the same tag, highlight changes
             children_a = node_a.get_children()
             children_b = node_b.get_children()
@@ -99,40 +102,48 @@ def build_diff_html(n1, n2, mapping):
             if not children_a and not children_b:
                 del_html = f"<del><{tag_a}>{text_a}</{tag_a}></del>"
                 ins_html = f"<ins><{tag_b}>{text_b}</{tag_b}></ins>"
+                print('leaf node: ' + del_html + ins_html)
                 return del_html + ins_html
             # Otherwise, show old subtree as deleted and new as inserted
+            print('not leaf node')
             del_html = f"<del>" + walk(node_a, None) + "</del>"
             ins_html = f"<ins>" + walk(None, node_b) + "</ins>"
             return del_html + ins_html
 
         # Unchanged node (exact match)
         if node_a and node_b and node_a.name == node_b.name:
+            print('case 2: ' + node_a.name + ' ' + node_b.name)
             tag, text = parse_node_name(node_a.name)
             children_a = node_a.get_children()
             if not children_a:
                 return f"<{tag}>{text}</{tag}>"
             children_html = ''.join([walk(cA, map_a.get(cA)) for cA in children_a])
+            print('case 2 END')
             return f"<{tag}>{children_html}</{tag}>"
 
         # Deletion (in A not in B)
         if node_a and not node_b:
+            print('case 3: ' + node_a.name)
             tag, text = parse_node_name(node_a.name)
             children_a = node_a.get_children()
             if not children_a:
-                return f"<del class='diff-del'><{tag}>{text}</{tag}></del>"
+                return f"<del><{tag}>{text}</{tag}></del>"
             children_html = ''.join([walk(cA, None) for cA in children_a])
-            return f"<del class='diff-del'><{tag}>{children_html}</{tag}></del>"
+            return f"<del><{tag}>{children_html}</{tag}></del>"
 
         # Insertion (in B not in A)
         if node_b and not node_a:
+            print('case 4: ' + node_b.name)
             tag, text = parse_node_name(node_b.name)
             children_b = node_b.get_children()
             if not children_b:
-                return f"<ins class='diff-ins'><{tag}>{text}</{tag}></ins>"
+                return f"<ins><{tag}>{text}</{tag}></ins>"
             children_html = ''.join([walk(None, cB) for cB in children_b])
-            return f"<ins class='diff-ins'><{tag}>{children_html}</{tag}></ins>"
+            return f"<ins><{tag}>{children_html}</{tag}></ins>"
 
         # Should not occur for well-formed trees/mapping
+        print('This should not happen!')
+        print(node_a, node_b)
         return ""
 
     return walk(n1, n2)

@@ -12,19 +12,29 @@ def diff():
     if request.method == "POST":
         a = request.json.get("a", '')
         b = request.json.get("b", '')
-        print('a:')
-        print(a)
-        print('b:')
-        print(b)
+        # print('a:')
+        # print(a)
+        # print('b:')
+        # print(b)
         try:
             n1, n2, distance, mapping = compute_diff(a, b)
             tree_a = pretty_tree(n1)
             tree_b = pretty_tree(n2)
             diff_ops = diff_operations(n1, n2, mapping)
             diff_html = build_diff_html(n1, n2, mapping)
+            # Convert mapping to serializable format (list of (labelA, labelB or None))
+            serializable_mapping = []
+            if mapping:
+                for m in mapping:
+                    nA = getattr(m[0], "name", None) if m[0] else None
+                    nB = getattr(m[1], "name", None) if m[1] else None
+                    serializable_mapping.append([nA, nB])
+            else:
+                serializable_mapping = []
 
-            print(diff_ops)
-            print(diff_html)
+            # print(mapping)
+            # print(diff_ops)
+            # print(diff_html)
         except Exception as e:
             tree_a = f"Error: {e}"
             tree_b = ""
@@ -33,6 +43,10 @@ def diff():
             diff_html = None
     return {
         "diff_html": diff_html,
+        "tree_a": tree_a,
+        "tree_b": tree_b,
+        "diff_ops": diff_ops,
+        "mapping": serializable_mapping,
     }
 
 @app.route("/apted-demo", methods=["GET"])

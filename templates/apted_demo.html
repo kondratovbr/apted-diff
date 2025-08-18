@@ -4,10 +4,6 @@
   <meta charset="UTF-8">
   <title>APTED HTML Diff Demo</title>
   <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
-  <style>
-  /* Diff coloring */
-  
-  </style>
 </head>
 <body class="bg-gray-50 text-gray-900 min-h-screen flex items-center justify-center">
   <div class="w-full max-w-6xl mx-auto bg-white rounded-2xl shadow-lg p-12 mt-16 mb-14">
@@ -15,17 +11,19 @@
     <form id="diff-form" autocomplete="off" class="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-8 mb-14">
       <div>
         <label for="htmlA" class="font-medium mb-3 block text-xl">HTML A</label>
-        <textarea id="htmlA" class="w-full min-h-[240px] rounded-xl border border-gray-300 p-4 font-mono text-base focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-100" spellcheck="false"><section><h2>Lead Developer</h2><p>We're hiring an exceptional leader to join our global team.</p><h3>Responsibilities</h3><ul><li>Define backend strategy</li><li>Mentor developers</li><li>Review code for multiple teams</li><li>Drive architectural decisions</li></ul><h3>Requirements</h3><ul><li>8+ years engineering experience</li><li>Mastery of Python, JavaScript, and Go</li><li>DevOps automation at scale</li><li>Leadership in hybrid/remote settings</li><li>Expert knowledge: AWS, GCP, Azure</li></ul><h3>Perks</h3><ul><li>Stock, bonus, growth plan</li><li>100% remote option</li><li>Generous health insurance</li><li>Annual company retreat</li><li>Wellness and learning stipends</li></ul><p>Ready to innovate? Apply now!</p><h2>Diversity, Equity, Inclusion and Belonging</h2><p>At [Company], we believe diverse teams build better products and communities. We welcome applicants from all backgrounds and identities, and we're committed to equitable hiring, inclusive workplaces, and a strong sense of belonging.</p></section></textarea>
+        <!-- <textarea id="htmlA" class="w-full min-h-[240px] rounded-xl border border-gray-300 p-4 font-mono text-base focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-100" spellcheck="false"><article><h2>Lead Developer</h2><p>We're hiring an exceptional leader to join our global team.</p><h3>Responsibilities</h3><ul><li>Define backend strategy</li><li>Mentor developers</li><li>Review code for multiple teams</li><li>Drive architectural decisions</li></ul><h3>Requirements</h3><ul><li>8+ years engineering experience</li><li>Mastery of Python, JavaScript, and Go</li><li>DevOps automation at scale</li><li>Leadership in hybrid/remote settings</li><li>Expert knowledge: AWS, GCP, Azure</li></ul><h3>Perks</h3><ul><li>Stock, bonus, growth plan</li><li>100% remote option</li><li>Generous health insurance</li><li>Annual company retreat</li><li>Wellness and learning stipends</li></ul><p>Ready to innovate? Apply now!</p><h2>Diversity, Equity, Inclusion and Belonging</h2><p>At [Company], we believe diverse teams build better products and communities. We welcome applicants from all backgrounds and identities, and we're committed to equitable hiring, inclusive workplaces, and a strong sense of belonging.</p></article></textarea> -->
+        <textarea id="htmlA" class="w-full min-h-[240px] rounded-xl border border-gray-300 p-4 font-mono text-base focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-100" spellcheck="false"><article><ul><li>Expert knowledge: AWS, GCP, Azure</li></ul><h3>Perks</h3><ul><li>Stock, bonus, growth plan</li><li>100% remote option</li></ul></article></textarea>
       </div>
       <div>
         <label for="htmlB" class="font-medium mb-3 block text-xl">HTML B</label>
-        <textarea id="htmlB" class="w-full min-h-[240px] rounded-xl border border-gray-300 p-4 font-mono text-base focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-100" spellcheck="false"><section><h2>Lead Developer</h2><p>We're hiring an exceptional leader to join our global team.</p><h3>Tasks</h3><ul><li>Develop and optimize API gateways</li><li>Coach a diverse global team of engineers</li><li>Lead code reviews, set best practices</li><li>Deliver scalable, secure cloud solutions</li></ul><h3>Requirements</h3><ul><li>8+ years engineering experience</li><li>Deep Node.js, Python, and Rust skills</li><li>Experience with K8s/IaC at scale</li><li>Global leadership history</li><li>Multi-cloud production expertise</li><li>Extra point 1</li><li>Extra point 2</li><li>Extra point 3</li></ul><p>Ready to innovate? Apply now!</p><h2 id="deib">Diversity, Equity, Inclusion and Belonging</h2><p>At [Company], we believe diverse teams build better products and communities. We welcome applicants from all backgrounds and identities, and we're committed to equitable hiring, inclusive workplaces, and a strong sense of belonging.</p></section></textarea>
+        <!-- <textarea id="htmlB" class="w-full min-h-[240px] rounded-xl border border-gray-300 p-4 font-mono text-base focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-100" spellcheck="false"><article><h2>Lead Developer</h2><p>We're hiring an exceptional leader to join our global team.</p><h3>Tasks</h3><ul><li>Develop and optimize API gateways</li><li>Coach a diverse global team of engineers</li><li>Lead code reviews, set best practices</li><li>Deliver scalable, secure cloud solutions</li></ul><h3>Requirements</h3><ul><li>8+ years engineering experience</li><li>Deep Node.js, Python, and Rust skills</li><li>Experience with K8s/IaC at scale</li><li>Global leadership history</li><li>Multi-cloud production expertise</li><li>Extra point 1</li><li>Extra point 2</li><li>Extra point 3</li></ul><p>Ready to innovate? Apply now!</p><h2 id="deib">Diversity, Equity, Inclusion and Belonging</h2><p>At [Company], we believe diverse teams build better products and communities. We welcome applicants from all backgrounds and identities, and we're committed to equitable hiring, inclusive workplaces, and a strong sense of belonging.</p></article></textarea> -->
+        <textarea id="htmlB" class="w-full min-h-[240px] rounded-xl border border-gray-300 p-4 font-mono text-base focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-100" spellcheck="false"><article><ul><li>Multi-cloud production expertise</li><li>Extra point 1</li><li>Extra point 2</li><li>Extra point 3</li></ul></article></textarea>
       </div>
       <div class="md:col-span-2 flex justify-center">
         <button type="submit" class="mt-2 py-4 px-16 bg-blue-600 text-white text-xl font-semibold rounded-xl hover:bg-blue-700 transition mx-auto">Diff</button>
       </div>
     </form>
-    <div id="result" class="result-area prose bg-gray-50 border border-gray-200 rounded-2xl p-8 min-h-[80px] mb-16 shadow-sm text-base"></div>
+    <div id="result" class="result-area prose max-w-none w-full px-0 bg-gray-50 border border-gray-200 rounded-2xl p-8 min-h-[80px] mb-16 shadow-sm text-base mx-0"></div>
     <div class="mt-16">
       <h3 class="text-3xl font-semibold text-center mb-10">Rendered Inputs</h3>
       <div class="flex flex-col lg:flex-row gap-14">
@@ -56,7 +54,49 @@
       .then(res => res.json())
       .then(data => {
         if (data && data.diff_html !== undefined && data.diff_html !== null) {
-          resultDiv.innerHTML = data.diff_html;
+          const renderTrees = `
+            <div class="mt-12">
+              <h4 class="text-xl font-semibold mb-4 text-center tracking-tight">Parsed Trees</h4>
+              <div class="flex flex-col md:flex-row gap-6">
+                <div class="flex-1">
+                  <div class="font-bold text-base text-slate-800 mb-1">Tree A</div>
+                  <pre class="font-mono text-[0.95rem] bg-slate-50 text-slate-700 rounded-xl p-4 overflow-x-auto max-h-80 border border-slate-200 select-text whitespace-pre-wrap">${data.tree_a ? escapeHtml(data.tree_a) : ''}</pre>
+                </div>
+                <div class="flex-1">
+                  <div class="font-bold text-base text-slate-800 mb-1">Tree B</div>
+                  <pre class="font-mono text-[0.95rem] bg-slate-50 text-slate-700 rounded-xl p-4 overflow-x-auto max-h-80 border border-slate-200 select-text whitespace-pre-wrap">${data.tree_b ? escapeHtml(data.tree_b) : ''}</pre>
+                </div>
+              </div>
+            </div>`;
+
+          const renderOps = `
+            <div class="mt-12">
+              <h4 class="text-xl font-semibold mb-4 text-center tracking-tight">APTED Diff Operations</h4>
+              <pre class="font-mono text-sm bg-slate-50 text-slate-700 rounded-xl p-4 overflow-x-auto max-h-72 border border-slate-200 select-text whitespace-pre-wrap">${
+                Array.isArray(data.diff_ops)
+                  ? data.diff_ops.map(op => {
+                      if (typeof op === "object") return JSON.stringify(op, null, 2);
+                      return String(op);
+                    }).join('\n\n')
+                  : (data.diff_ops ? escapeHtml(String(data.diff_ops)) : '')
+              }</pre>
+            </div>`;
+
+          const renderMapping = `
+            <div class="mt-12">
+              <h4 class="text-xl font-semibold mb-4 text-center tracking-tight">APTED Mapping</h4>
+              <pre class="font-mono text-sm bg-slate-50 text-slate-700 rounded-xl p-4 overflow-x-auto max-h-64 border border-slate-200 select-text whitespace-pre-wrap">${
+                Array.isArray(data.mapping)
+                  ? data.mapping.map(
+                      item => Array.isArray(item)
+                        ? `[${item.join(", ")}]`
+                        : JSON.stringify(item)
+                    ).join('\n')
+                  : (data.mapping ? escapeHtml(String(data.mapping)) : '')
+              }</pre>
+            </div>`;
+
+          resultDiv.innerHTML = data.diff_html + renderTrees + renderOps + renderMapping;
         } else {
           resultDiv.innerHTML = "<em class='text-gray-500'>Diff could not be computed or result empty.</em>";
         }
@@ -77,6 +117,13 @@
     document.getElementById('htmlB').addEventListener('input', updateRenders);
     // On first load, render previews
     updateRenders();
+      // Safe HTML escape for <pre>
+      function escapeHtml(str) {
+        return str
+          .replace(/&/g, "&")
+          .replace(/</g, "<")
+          .replace(/>/g, ">");
+      }
   </script>
 </body>
 </html>

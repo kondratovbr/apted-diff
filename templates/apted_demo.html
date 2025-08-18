@@ -3,24 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <title>APTED HTML Diff Demo</title>
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss-typography@0.5.12/dist/typography.min.css">
-<!-- No reliable CDN for Tailwind's prose plugin; so we provide minimal prose CSS for demo-only prettification! -->
+  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
   <style>
-  .prose { 
-    color: #334155; 
-    max-width: none; 
-    font-size: 1.1rem; 
-    line-height: 1.7;
-    word-break: break-word;
-  }
-  .prose h1,.prose h2,.prose h3 { font-weight:600; margin-block:1.2em 0.4em; }
-  .prose ul, .prose ol { padding-left:2em; margin:1em 0; }
-  .prose li { margin-bottom: 0.3em; }
-  .prose img { border-radius: 0.5em; display:inline-block; max-width:100%; margin:0.7em 0; }
-  .prose p { margin:0.85em 0; }
-  .prose strong { font-weight:600;}
-  .prose code { background:#f3f3f3; border-radius:0.3em; padding:0 0.3em; }
+  /* Diff coloring */
+  
   </style>
 </head>
 <body class="bg-gray-50 text-gray-900 min-h-screen flex items-center justify-center">
@@ -29,11 +15,11 @@
     <form id="diff-form" autocomplete="off" class="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-8 mb-14">
       <div>
         <label for="htmlA" class="font-medium mb-3 block text-xl">HTML A</label>
-        <textarea id="htmlA" class="w-full min-h-[240px] rounded-xl border border-gray-300 p-4 font-mono text-base focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-100" spellcheck="false"><section><h2>Lead Developer</h2><p>We're hiring an exceptional leader to join our global team.</p><h3>Responsibilities</h3><ul><li>Define backend strategy</li><li>Mentor developers</li><li>Review code for multiple teams</li><li>Drive architectural decisions</li></ul><h3>Requirements</h3><ul><li>8+ years engineering experience</li><li>Mastery of Python, JavaScript, and Go</li><li>DevOps automation at scale</li><li>Leadership in hybrid/remote settings</li><li>Expert knowledge: AWS, GCP, Azure</li></ul><h3>Perks</h3><ul><li>Stock, bonus, growth plan</li><li>100% remote option</li><li>Generous health insurance</li><li>Annual company retreat</li><li>Wellness and learning stipends</li></ul><p>Ready to innovate? Apply now!</p><h2>Diversity, Equity, Inclusion and Belonging</h2><p>At <strong>[Company]</strong>, we believe diverse teams build better products and communities. We welcome applicants from all backgrounds and identities, and we're committed to equitable hiring, inclusive workplaces, and a strong sense of belonging.</p></section></textarea>
+        <textarea id="htmlA" class="w-full min-h-[240px] rounded-xl border border-gray-300 p-4 font-mono text-base focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-100" spellcheck="false"><section><h2>Lead Developer</h2><p>We're hiring an exceptional leader to join our global team.</p><h3>Responsibilities</h3><ul><li>Define backend strategy</li><li>Mentor developers</li><li>Review code for multiple teams</li><li>Drive architectural decisions</li></ul><h3>Requirements</h3><ul><li>8+ years engineering experience</li><li>Mastery of Python, JavaScript, and Go</li><li>DevOps automation at scale</li><li>Leadership in hybrid/remote settings</li><li>Expert knowledge: AWS, GCP, Azure</li></ul><h3>Perks</h3><ul><li>Stock, bonus, growth plan</li><li>100% remote option</li><li>Generous health insurance</li><li>Annual company retreat</li><li>Wellness and learning stipends</li></ul><p>Ready to innovate? Apply now!</p><h2>Diversity, Equity, Inclusion and Belonging</h2><p>At [Company], we believe diverse teams build better products and communities. We welcome applicants from all backgrounds and identities, and we're committed to equitable hiring, inclusive workplaces, and a strong sense of belonging.</p></section></textarea>
       </div>
       <div>
         <label for="htmlB" class="font-medium mb-3 block text-xl">HTML B</label>
-        <textarea id="htmlB" class="w-full min-h-[240px] rounded-xl border border-gray-300 p-4 font-mono text-base focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-100" spellcheck="false"><section><h2>Lead Developer</h2><p>We're hiring an exceptional leader to join our global team.</p><h3>Responsibilities</h3><ul><li>Develop and optimize API gateways</li><li>Coach a diverse global team of engineers</li><li>Lead code reviews, set best practices</li><li>Deliver scalable, secure cloud solutions</li></ul><h3>Must-haves</h3><ul><li>8+ years software experience</li><li>Deep Node.js, Python, and Rust skills</li><li>Experience with K8s/IaC at scale</li><li>Global leadership history</li><li>Multi-cloud production expertise</li><li>Extra point 1</li><li>Extra point 2</li><li>Extra point 3</li></ul><p>Ready to innovate? Apply now!</p><h2 id="deib">Diversity, Equity, Inclusion and Belonging</h2><p>At <strong>[Company]</strong>, we believe diverse teams build better products and communities. We welcome applicants from all backgrounds and identities, and we're committed to equitable hiring, inclusive workplaces, and a strong sense of belonging.</p></section></textarea>
+        <textarea id="htmlB" class="w-full min-h-[240px] rounded-xl border border-gray-300 p-4 font-mono text-base focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-100" spellcheck="false"><section><h2>Lead Developer</h2><p>We're hiring an exceptional leader to join our global team.</p><h3>Tasks</h3><ul><li>Develop and optimize API gateways</li><li>Coach a diverse global team of engineers</li><li>Lead code reviews, set best practices</li><li>Deliver scalable, secure cloud solutions</li></ul><h3>Requirements</h3><ul><li>8+ years engineering experience</li><li>Deep Node.js, Python, and Rust skills</li><li>Experience with K8s/IaC at scale</li><li>Global leadership history</li><li>Multi-cloud production expertise</li><li>Extra point 1</li><li>Extra point 2</li><li>Extra point 3</li></ul><p>Ready to innovate? Apply now!</p><h2 id="deib">Diversity, Equity, Inclusion and Belonging</h2><p>At [Company], we believe diverse teams build better products and communities. We welcome applicants from all backgrounds and identities, and we're committed to equitable hiring, inclusive workplaces, and a strong sense of belonging.</p></section></textarea>
       </div>
       <div class="md:col-span-2 flex justify-center">
         <button type="submit" class="mt-2 py-4 px-16 bg-blue-600 text-white text-xl font-semibold rounded-xl hover:bg-blue-700 transition mx-auto">Diff</button>

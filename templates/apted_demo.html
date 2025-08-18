@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>APTED HTML Diff Demo</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen flex items-center justify-center">
+  <div class="w-full max-w-6xl mx-auto bg-white rounded-2xl shadow-lg p-12 mt-16 mb-14">
+    <h2 class="text-4xl font-bold text-center mb-14 tracking-tight">APTED HTML Diff Demo</h2>
+    <form id="diff-form" autocomplete="off" class="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-8 mb-14">
+      <div>
+        <label for="htmlA" class="font-medium mb-3 block text-xl">HTML A</label>
+        <textarea id="htmlA" class="w-full min-h-[240px] rounded-xl border border-gray-300 p-4 font-mono text-base focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-100" spellcheck="false"><div><h2>Lead Developer</h2><p>We're hiring an exceptional leader to join our global team.</p><h3>Responsibilities</h3><ul><li>Define backend strategy</li><li>Mentor developers</li><li>Review code for multiple teams</li><li>Drive architectural decisions</li></ul><h3>Requirements</h3><ul><li>8+ years engineering experience</li><li>Mastery of Python, JavaScript, and Go</li><li>DevOps automation at scale</li><li>Leadership in hybrid/remote settings</li><li>Expert knowledge: AWS, GCP, Azure</li></ul><h3>Perks</h3><ul><li>Stock, bonus, growth plan</li><li>100% remote option</li><li>Generous health insurance</li><li>Annual company retreat</li><li>Wellness and learning stipends</li></ul><p>Ready to innovate? Apply now!</p><h2>Diversity, Equity, Inclusion and Belonging</h2><p>At <strong>[Company]</strong>, we believe diverse teams build better products and communities. We welcome applicants from all backgrounds and identities, and we're committed to equitable hiring, inclusive workplaces, and a strong sense of belonging.</p></div></textarea>
+      </div>
+      <div>
+        <label for="htmlB" class="font-medium mb-3 block text-xl">HTML B</label>
+        <textarea id="htmlB" class="w-full min-h-[240px] rounded-xl border border-gray-300 p-4 font-mono text-base focus:outline-none focus:ring-2 focus:ring-blue-300 bg-gray-100" spellcheck="false"><div><h2>Lead Developer</h2><p>We're hiring an exceptional leader to join our global team.</p><h3>Responsibilities</h3><ul><li>Develop and optimize API gateways</li><li>Coach a diverse global team of engineers</li><li>Lead code reviews, set best practices</li><li>Deliver scalable, secure cloud solutions</li></ul><h3>Must-haves</h3><ul><li>8+ years software experience</li><li>Deep Node.js, Python, and Rust skills</li><li>Experience with K8s/IaC at scale</li><li>Global leadership history</li><li>Multi-cloud production expertise</li><li>Extra point 1</li><li>Extra point 2</li><li>Extra point 3</li></ul><p>Ready to innovate? Apply now!</p><h2 id="deib">Diversity, Equity, Inclusion and Belonging</h2><p>At <strong>[Company]</strong>, we believe diverse teams build better products and communities. We welcome applicants from all backgrounds and identities, and we're committed to equitable hiring, inclusive workplaces, and a strong sense of belonging.</p></div></textarea>
+      </div>
+      <div class="md:col-span-2 flex justify-center">
+        <button type="submit" class="mt-2 py-4 px-16 bg-blue-600 text-white text-xl font-semibold rounded-xl hover:bg-blue-700 transition mx-auto">Diff</button>
+      </div>
+    </form>
+    <div id="result" class="result-area bg-gray-50 border border-gray-200 rounded-2xl p-8 min-h-[80px] mb-16 shadow-sm text-base"></div>
+    <div class="mt-16">
+      <h3 class="text-3xl font-semibold text-center mb-10">Rendered Inputs</h3>
+      <div class="flex flex-col lg:flex-row gap-14">
+        <div class="flex-1 border border-gray-200 rounded-xl p-6 bg-gray-50">
+          <div class="text-xs font-semibold text-gray-500 mb-3 text-center tracking-wide uppercase">Rendered HTML A</div>
+          <div id="renderA" class="p-6 bg-white rounded min-h-[120px] border"></div>
+        </div>
+        <div class="flex-1 border border-gray-200 rounded-xl p-6 bg-gray-50">
+          <div class="text-xs font-semibold text-gray-500 mb-3 text-center tracking-wide uppercase">Rendered HTML B</div>
+          <div id="renderB" class="p-6 bg-white rounded min-h-[120px] border"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const form = document.getElementById('diff-form');
+    const resultDiv = document.getElementById('result');
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const a = document.getElementById('htmlA').value;
+      const b = document.getElementById('htmlB').value;
+      resultDiv.innerHTML = '<div class="text-center text-gray-400">Computing diff...</div>';
+      fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ a, b })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.diff_html !== undefined && data.diff_html !== null) {
+          resultDiv.innerHTML = data.diff_html;
+        } else {
+          resultDiv.innerHTML = "<em class='text-gray-500'>Diff could not be computed or result empty.</em>";
+        }
+      })
+      .catch(err => {
+        resultDiv.innerHTML = "<em class='text-red-600'>Error: " + err + "</em>";
+      });
+    });
+
+    // Render HTML as live preview
+    function updateRenders() {
+      const htmlA = document.getElementById('htmlA').value;
+      const htmlB = document.getElementById('htmlB').value;
+      document.getElementById('renderA').innerHTML = htmlA;
+      document.getElementById('renderB').innerHTML = htmlB;
+    }
+    document.getElementById('htmlA').addEventListener('input', updateRenders);
+    document.getElementById('htmlB').addEventListener('input', updateRenders);
+    // On first load, render previews
+    updateRenders();
+  </script>
+</body>
+</html>

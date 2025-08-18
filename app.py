@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, render_template
 from apted_demo import compute_diff, pretty_tree, diff_operations, build_diff_html
 
 app = Flask(__name__)
@@ -34,6 +34,11 @@ def diff():
     return {
         "diff_html": diff_html,
     }
+
+@app.route("/apted-demo", methods=["GET"])
+def apted_demo_page():
+    """Serve the demo page for APTED HTML diff."""
+    return render_template("apted_demo.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
